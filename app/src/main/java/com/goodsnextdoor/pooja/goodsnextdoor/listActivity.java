@@ -10,6 +10,7 @@ import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Intent;
 import android.graphics.Typeface;
+import android.location.Location;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
@@ -37,10 +38,12 @@ public class listActivity extends Activity {
     // Array of strings storing country names
 
     item it=new item();
+    double latitude,longitude;
     String[] itemnames=new String[50];
     String[] itemcity=new String[50];
-    String[] testitemnames=new String[50];
-    String[] testitemcity=new String[50];
+    Double[] lats=new Double[50];
+    Double[] longs=new Double[50];
+    float[] r =new float[50];
 
     // Array of integers points to images stored in /res/drawable-ldpi/
 
@@ -57,6 +60,8 @@ public class listActivity extends Activity {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_list);
+        latitude = getIntent().getDoubleExtra("latitude",-34.0);
+        longitude= getIntent().getDoubleExtra("longitude", 151.0);
         category = getIntent().getStringExtra("category");
         itemname = getIntent().getStringExtra("itemname");
 
@@ -86,7 +91,9 @@ public class listActivity extends Activity {
                 protected Void doInBackground(Void... params) {
                      int j=0;
                     final MobileServiceTable<item> table = mClient.getTable(item.class);
+
                     MobileServiceList<item> results;
+
                     try {
                         if(!itemname.isEmpty()) {
 
@@ -95,9 +102,14 @@ public class listActivity extends Activity {
                             {
                                 if(results.get(i).getname().toString().toLowerCase().contains(itemname.toLowerCase()))
                                 {
-                                    itemnames[j]=results.get(i).getname().toString();
-                                    itemcity[j] = results.get(i).getcity().toString();
-                                    j=j+1;
+                                    Location.distanceBetween(latitude,longitude,results.get(i).getlatitude(),results.get(i).getlongitude(),r);
+                                    if(r[0]<1000) {
+                                        itemnames[j] = results.get(i).getname().toString();
+                                        itemcity[j] = results.get(i).getcity().toString();
+                                        lats[j] = results.get(i).getlatitude();
+                                        longs[j] = results.get(i).getlongitude();
+                                        j = j + 1;
+                                    }
                                 }
 
                             }
@@ -109,9 +121,14 @@ public class listActivity extends Activity {
                             results = mitem.where().field("category").eq(category).execute().get();
                             totalitems = results.size();
                             for (int i = 0; i < results.size(); i++) {
+                                Location.distanceBetween(latitude,longitude,results.get(i).getlatitude(),results.get(i).getlongitude(),r);
+                                if(r[0]<1000) {
+                                    itemnames[i] = results.get(i).getname().toString();
+                                    itemcity[i] = results.get(i).getcity().toString();
+                                    lats[i] = results.get(i).getlatitude();
+                                    longs[i] = results.get(i).getlongitude();
+                                }
 
-                                itemnames[i] = results.get(i).getname().toString();
-                                itemcity[i] = results.get(i).getcity().toString();
                         }
 
                         }
