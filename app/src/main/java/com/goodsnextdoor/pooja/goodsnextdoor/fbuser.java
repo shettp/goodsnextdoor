@@ -3,7 +3,7 @@ package com.goodsnextdoor.pooja.goodsnextdoor;
 /**
  * Created by Rath on 11/2/2015.
  */
-public class user {
+public class fbuser {
 
     @com.google.gson.annotations.SerializedName("userid")
     private String muid;
@@ -29,34 +29,25 @@ public class user {
     /**
      * ToDoItem constructor
      */
-    public user() {
+    public fbuser() {
         memail="";
         mId="";
         mname="";
         muid="";
-        mContainerName = "";
-        mResourceName = "";
         mImageUri = "";
-        mSasQueryString = "";
     }
 
 
 
 
 
-    public user(String uid, String name, String email,String iid,
-                String containerName,
-                String resourceName,
-                String imageUri,
-                String sasQueryString) {
+    public fbuser(String uid, String name, String email,String iid,
+                String imageUri) {
         this.setuid(uid);
         this.setid(iid);
         this.setemail(email);
         this.setname(name);
-        this.setContainerName(containerName);
-        this.setResourceName(resourceName);
         this.setImageUri(imageUri);
-        this.setSasQueryString(sasQueryString);
     }
 
     /**
@@ -131,78 +122,10 @@ public class user {
         mImageUri = ImageUri;
     }
 
-    /**
-     * ContainerName - like a directory, holds blobs
-     */
-    @com.google.gson.annotations.SerializedName("containerName")
-    private String mContainerName;
 
-    /**
-     * Returns the item ContainerName
-     */
-    public String getContainerName() {
-        return mContainerName;
-    }
 
-    /**
-     * Sets the item ContainerName
-     *
-     * @param ContainerName
-     *            Uri to set
-     */
-    public final void setContainerName(String ContainerName) {
-        mContainerName = ContainerName;
-    }
-
-    /**
-     *  ResourceName
-     */
-    @com.google.gson.annotations.SerializedName("resourceName")
-    private String mResourceName;
-
-    /**
-     * Returns the item ResourceName
-     */
-    public String getResourceName() {
-        return mResourceName;
-    }
-
-    /**
-     * Sets the item ResourceName
-     *
-     * @param ResourceName
-     *            Uri to set
-     */
-    public final void setResourceName(String ResourceName) {
-        mResourceName = ResourceName;
-    }
-
-    /**
-     *  SasQueryString - permission to write to storage
-     */
-    @com.google.gson.annotations.SerializedName("sasQueryString")
-    private String mSasQueryString;
-
-    /**
-     * Returns the item SasQueryString
-     */
-    public String getSasQueryString() {
-        return mSasQueryString;
-    }
-
-    /**
-     * Sets the item SasQueryString
-     *
-     * @param SasQueryString
-     *            Uri to set
-     */
-    public final void setSasQueryString(String SasQueryString) {
-        mSasQueryString = SasQueryString;
-    }
-
-    @Override
     public boolean equals(Object o) {
-        return o instanceof user && ((user) o).muid == muid;
+        return o instanceof user && ((fbuser) o).muid == muid;
 
     }
 }

@@ -32,5 +32,12 @@
         android:onClick="Post"
         android:text="Post" />
 
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Manage my Posts"
+        android:onClick="mypost"
+        android:id="@+id/manage" />
+
 
 </LinearLayout>

@@ -1,116 +1,73 @@
 package com.goodsnextdoor.pooja.goodsnextdoor;
 
 /**
- * Created by Rath on 11/2/2015.
+ * Created by Rath on 1/17/2016.
  */
-public class user {
-
-    @com.google.gson.annotations.SerializedName("userid")
-    private String muid;
+public class ToDoItem {
 
     /**
-     * Item Id
+     *  imageUri - points to location in storage where photo will go
      */
-    @com.google.gson.annotations.SerializedName("name")
-    private String mname;
-    @com.google.gson.annotations.SerializedName("id")
-    private String mId;
-
-
-    @com.google.gson.annotations.SerializedName("email")
-    private String memail;
-
-    /**
-     * Indicates if the item is completed
-     */
-    //  @com.google.gson.annotations.SerializedName("complete")
-    //private boolean mComplete;
 
     /**
      * ToDoItem constructor
      */
-    public user() {
-        memail="";
-        mId="";
-        mname="";
-        muid="";
+    public ToDoItem() {
         mContainerName = "";
         mResourceName = "";
         mImageUri = "";
         mSasQueryString = "";
     }
-
-
-
-
-
-    public user(String uid, String name, String email,String iid,
-                String containerName,
-                String resourceName,
-                String imageUri,
-                String sasQueryString) {
-        this.setuid(uid);
-        this.setid(iid);
-        this.setemail(email);
-        this.setname(name);
+    /**
+     * Initializes a new ToDoItem
+     *
+     * @param text
+     *            The item text
+     * @param id
+     *            The item id
+     */
+    public ToDoItem(String text,
+                    String id,
+                    String containerName,
+                    String resourceName,
+                    String imageUri,
+                    String sasQueryString) {
+        this.setText(text);
+        this.setId(id);
         this.setContainerName(containerName);
         this.setResourceName(resourceName);
         this.setImageUri(imageUri);
         this.setSasQueryString(sasQueryString);
     }
 
-    /**
-     * Returns the item text
-     */
-    public String getId()
-    {
+    @com.google.gson.annotations.SerializedName("text")
+    private String mText;
+    public String getText() {
+        return mText;
+    }
+
+
+
+    public final void setText(String text) {
+        mText = text;
+    }
+
+    @com.google.gson.annotations.SerializedName("id")
+    private String mId;
+    public String getId() {
         return mId;
     }
-    public final void  setid(String id)
-    {
-        mId=id;
-    }
-    public String getuid() {
-        return muid;
+
+
+
+    public final void setId(String id) {
+        mId = id;
     }
 
 
 
 
-    /**
-     * Sets the item text
-     *
-     * @param text
-     *            text to set
-     */
-    public final void setuid(String text) {
-        muid= text;
-    }
 
-    /**
-     * Returns the item id
-     */
-    public String getname() {
-        return mname;
-
-    }
-    public final void setname(String name) {
-        mname = name;
-    }
-    public  String getemail()
-    {
-        return memail;
-    }
-    public final void setemail(String email)
-    {
-        memail=email;
-    }
-    /**
-     * Indicates if the item is marked as completed
-     */
-    /**
-     *  imageUri - points to location in storage where photo will go
-     */
     @com.google.gson.annotations.SerializedName("imageUri")
     private String mImageUri;
 
@@ -198,11 +155,5 @@ public class user {
      */
     public final void setSasQueryString(String SasQueryString) {
         mSasQueryString = SasQueryString;
-    }
-
-    @Override
-    public boolean equals(Object o) {
-        return o instanceof user && ((user) o).muid == muid;
-
     }
 }

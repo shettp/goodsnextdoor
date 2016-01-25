@@ -47,6 +47,7 @@ import java.net.MalformedURLException;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.URL;
+import java.util.UUID;
 
 public class ProfileActivity extends AppCompatActivity{
     TextView username;
@@ -57,10 +58,12 @@ public class ProfileActivity extends AppCompatActivity{
 
 
 Profile d;
-    private MobileServiceTable<user> muser;
+    private MobileServiceTable<fbuser> muser;
+    private MobileServiceTable<user> motheruser;
     private MobileServiceClient mClient;
+    Uri ur;
 
-    final user item = new user();
+    final fbuser item = new fbuser();
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -86,8 +89,9 @@ Profile d;
         item.setuid(d.getId());
 
 
-        Uri ur=d.getProfilePictureUri(500, 500);
+         ur=d.getProfilePictureUri(500, 500);
         String g=ur.toString();
+        item.setImageUri(g);
         URI uri = null;
         URL urll = null;
         String uriString =g;
@@ -121,7 +125,8 @@ Profile d;
             mClient = new MobileServiceClient("https://goodsnextdoorproject.azure-mobile.net/","wfPWzbslQQqWgCwgYRzGTzRbXeYBLj14",this);
 
             // Get the Mobile Service Table instance to use
-            muser = mClient.getTable(user.class);
+            muser = mClient.getTable(fbuser.class);
+            motheruser=mClient.getTable((user.class));
         } catch (MalformedURLException e) {
             new Exception("There was an error creating the Mobile Service. Verify the URL");
         }
@@ -151,14 +156,17 @@ Profile d;
 
             public void onClick(DialogInterface dialog,int id) {
                 item.setemail(input.getText().toString());
+                item.setImageUri(ur.toString());
 
                 new AsyncTask<Void, Void, Void>() {
                         @Override
                     protected Void doInBackground(Void... params) {
                         try {
-                            final MobileServiceList<user> result =
+                            final MobileServiceList<fbuser> result =
                                     muser.where().field("userid").eq(item.getuid()).execute().get();
-                            if(result.isEmpty()) {
+                            final MobileServiceList<user> result1 =
+                                    motheruser.where().field("userid").eq(item.getuid()).execute().get();
+                            if(result.isEmpty()&&result1.isEmpty()) {
                                 muser.insert(item).get();
                             }
                         } catch (Exception exception) {

@@ -23,6 +23,7 @@ import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.SimpleAdapter;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.facebook.Profile;
 import com.google.android.gms.maps.CameraUpdateFactory;
@@ -31,6 +32,7 @@ import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.microsoft.windowsazure.mobileservices.MobileServiceClient;
 import com.microsoft.windowsazure.mobileservices.MobileServiceList;
@@ -42,7 +44,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 
-public class MapsActivity extends FragmentActivity implements OnMapReadyCallback{
+public class MapsActivity extends FragmentActivity implements GoogleMap.OnInfoWindowClickListener,OnMapReadyCallback{
 
     private GoogleMap mMap;
     double latitude,longitude;
@@ -54,10 +56,14 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     item it=new item();
     String[] itemnames=new String[50];
     String[] itemcity=new String[50];
+    String[] description=new String[50];
+    String[] ownerids=new String[50];
     Double[] lats=new Double[50];
     Double[] longs=new Double[50];
     String category;
     String itemname;
+    int k=0;
+    String selectedlat,selectedlong,selecteduserid,selectedesc;
     float[] r=new float[50];
 
 
@@ -107,6 +113,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                                 if (r[0] < 1000) {
                                     itemnames[j] = results.get(i).getname().toString();
                                     itemcity[j] = results.get(i).getcity().toString();
+                                    description[i] = results.get(i).getdescription().toString();
                                     lats[j] = results.get(i).getlatitude();
                                     longs[j] = results.get(i).getlongitude();
                                     j = j + 1;
@@ -124,10 +131,12 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                         for (int i = 0; i < results.size(); i++) {
                             Location.distanceBetween(latitude, longitude, results.get(i).getlatitude(), results.get(i).getlongitude(), r);
                             if (r[0] < 1000) {
-                                itemnames[i] = results.get(i).getname().toString();
-                                itemcity[i] = results.get(i).getcity().toString();
-                                lats[i] = results.get(i).getlatitude();
-                                longs[i] = results.get(i).getlongitude();
+                                itemnames[j] = results.get(i).getname().toString();
+                                itemcity[j] = results.get(i).getcity().toString();
+                                description[j] = results.get(i).getdescription().toString();
+                                lats[j] = results.get(i).getlatitude();
+                                longs[j] = results.get(i).getlongitude();
+                                j=j+1;
                             }
                         }
 
@@ -179,18 +188,28 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
      * it inside the SupportMapFragment. This method will only be triggered once the user has
      * installed Google Play services and returned to the app.
      */
+
+    @Override
+    public void onInfoWindowClick(Marker marker) {
+        Intent  intent = new Intent(MapsActivity.this, itemdescriptionActivity.class);
+        String selecteditemname=marker.getTitle().split(": ")[0];
+        String selecteddescription=marker.getTitle().split(": ")[1];
+        intent.putExtra("itemname",selecteditemname);
+        intent.putExtra("description",selecteddescription);
+        startActivity(intent);
+    }
     @Override
     public void onMapReady(GoogleMap googleMap) {
         mMap = googleMap;
         LatLng sydney = new LatLng(latitude, longitude);
 
-        mMap.addMarker(new MarkerOptions().position(sydney).title("Marker in Sydney"));
-       int k=0;
+        mMap.addMarker(new MarkerOptions().position(sydney).title("My location"));
+
         while(lats[k]!=null)
         { LatLng others = new LatLng(lats[k], longs[k]);
-            mMap.addMarker(new MarkerOptions().position(others).title("Marker in Sydney").icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_YELLOW)));
+            mMap.addMarker(new MarkerOptions().position(others).title(itemnames[k]+": "+description[k]).icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_YELLOW)));
+            mMap.setOnInfoWindowClickListener(this);
             k=k+1;
-
         }
         mMap.moveCamera(CameraUpdateFactory.newLatLng(sydney));
     }

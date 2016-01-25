@@ -53,17 +53,7 @@
     <Button
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Submit"
-        android:id="@+id/psub"
-        android:onClick="uploadPhoto"
-        android:layout_alignParentBottom="true"
-        android:layout_centerHorizontal="true"
-        android:layout_marginBottom="150dp" />
-
-    <Button
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Choose Photo"
+        android:text="Click Photo"
         android:id="@+id/ph"
         android:onClick="takePicture"
         android:layout_marginTop="59dp"
@@ -75,11 +65,29 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:id="@+id/imageView"
-        android:layout_alignBottom="@+id/ph"
-        android:layout_alignParentRight="true"
-        android:layout_alignParentEnd="true"
-        android:layout_marginRight="36dp"
-        android:layout_marginEnd="36dp"
-        android:layout_alignTop="@+id/ph" />
+        android:layout_toRightOf="@+id/ph"
+        android:layout_alignRight="@+id/upload"
+        android:layout_alignEnd="@+id/upload"
+        android:layout_alignTop="@+id/ph"
+        android:layout_alignBottom="@+id/ph" />
+
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="upload&amp;submit"
+        android:id="@+id/upload"
+        android:onClick="uploadPhoto"
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true"
+        android:layout_marginBottom="112dp" />
+
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Choose"
+        android:id="@+id/pick"
+        android:layout_alignTop="@+id/imageView"
+        android:layout_toRightOf="@+id/imageView"
+        android:layout_toEndOf="@+id/imageView" />
 
 </RelativeLayout>

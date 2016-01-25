@@ -7,6 +7,7 @@ import android.database.Cursor;
 import android.graphics.drawable.BitmapDrawable;
 import android.os.Bundle;
 import android.os.Environment;
+import android.provider.DocumentsContract;
 import android.provider.MediaStore;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
@@ -84,20 +85,24 @@ import java.util.UUID;
 import java.util.concurrent.ExecutionException;
 
 public class EditActivity extends AppCompatActivity {
-    final user item = new user();
+    final ToDoItem item1 = new ToDoItem();
     private int PICK_IMAGE_REQUEST = 1;
     private final int SELECT_PHOTO = 1;
     private MobileServiceTable<user> muser;
+    private MobileServiceTable<fbuser> otheruser;
     private MobileServiceClient mClient;
-    String imgDecodableString;
+    int flag=0;
     private static int RESULT_LOAD_IMG = 1;
     TextView pname;
     TextView pcontact;
     ImageView imageView;
     private static int RESULT_LOAD_IMAGE = 1;
     private static final int SELECT_PICTURE = 1;
-
-    private String selectedImagePath;
+    // Run an Intent to start up the Android camera
+    static final int REQUEST_TAKE_PHOTO = 1;
+    public Uri mPhotoFileUri = null;
+    public File mPhotoFile = null;
+    String filePath = "";
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -115,21 +120,22 @@ public class EditActivity extends AppCompatActivity {
 
             // Get the Mobile Service Table instance to use
             muser = mClient.getTable(user.class);
+            otheruser=mClient.getTable(fbuser.class);
         } catch (MalformedURLException e) {
             new Exception("There was an error creating the Mobile Service. Verify the URL");
         }
-       /* Button choose=(Button)findViewById(R.id.ph);
+       Button choose=(Button)findViewById(R.id.pick);
         choose.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
                 Intent intent = new Intent();
-// Show only images, no videos or anything else
+               flag=0;
                 intent.setType("image/*");
                 intent.setAction(Intent.ACTION_GET_CONTENT);
 // Always show the chooser (if there are multiple options available)
                 startActivityForResult(Intent.createChooser(intent, "Select Picture"), PICK_IMAGE_REQUEST);
 
             }
-        });*/
+        });
     }
     public void loadImagefromGallery(View view) {
         // Create intent to Open Image applications like Gallery, Google Photos
@@ -146,10 +152,33 @@ public class EditActivity extends AppCompatActivity {
 
         if (requestCode == PICK_IMAGE_REQUEST && resultCode == RESULT_OK && data != null && data.getData() != null) {
 
-            Uri uri = data.getData();
+             mPhotoFileUri = data.getData();
+            String wholeID = DocumentsContract.getDocumentId(mPhotoFileUri);
+
+            // Split at colon, use second item in the array
+            String id = wholeID.split(":")[1];
+
+            String[] column = { MediaStore.Images.Media.DATA };
+
+            // where id is equal to
+            String sel = MediaStore.Images.Media._ID + "=?";
+
+            Cursor cursor = getContentResolver().
+                    query(MediaStore.Images.Media.EXTERNAL_CONTENT_URI,
+                            column, sel, new String[]{ id }, null);
+
+
+
+            int columnIndex = cursor.getColumnIndex(column[0]);
+
+            if (cursor.moveToFirst()) {
+                filePath = cursor.getString(columnIndex);
+            }
+            cursor.close();
+
 
             try {
-                Bitmap bitmap = MediaStore.Images.Media.getBitmap(getContentResolver(), uri);
+                Bitmap bitmap = MediaStore.Images.Media.getBitmap(getContentResolver(), mPhotoFileUri);
                 // Log.d(TAG, String.valueOf(bitmap));
 
                 ImageView imageView = (ImageView) findViewById(R.id.imageView);
@@ -160,29 +189,7 @@ public class EditActivity extends AppCompatActivity {
         }
     }
 
-    public void submit(View view)
-    {
 
-
-        // Use a unigue GUID to avoid collisions.
-
-        new AsyncTask<Void, Void, Void>() {
-            @Override
-            protected Void doInBackground(Void... params) {
-                try {
-                    final MobileServiceList<user> result =
-                            muser.where().field("userid").eq(item.getuid()).execute().get();
-                    if(result.isEmpty()) {
-                        muser.insert(item).get();
-                    }
-
-                } catch (Exception exception) {
-                    new Exception("Error");
-                }
-                return null;
-            }
-        }.execute();
-    }
 
     // Create a File object for storing the photo
     private File createImageFile() throws IOException {
@@ -198,12 +205,10 @@ public class EditActivity extends AppCompatActivity {
         return image;
     }
 
-    // Run an Intent to start up the Android camera
-    static final int REQUEST_TAKE_PHOTO = 1;
-    public Uri mPhotoFileUri = null;
-    public File mPhotoFile = null;
+
 
     public void takePicture(View view) {
+
         ActivityCompat.requestPermissions(EditActivity.this,
                 new String[]{Manifest.permission.CAMERA},
                 1);
@@ -228,6 +233,7 @@ public class EditActivity extends AppCompatActivity {
                         1);
             }
         }
+        flag=1;
         Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
         // Ensure that there's a camera activity to handle the intent
         if (takePictureIntent.resolveActivity(getPackageManager()) != null) {
@@ -243,14 +249,27 @@ public class EditActivity extends AppCompatActivity {
                 mPhotoFileUri = Uri.fromFile(mPhotoFile);
                 takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT, mPhotoFileUri);
                 startActivityForResult(takePictureIntent, REQUEST_TAKE_PHOTO);
+
             }
         }
     }
 
-    public user addItemInTable(user item) throws ExecutionException, InterruptedException {
-        user entity = muser.insert(item).get();
-        return entity;
+  public user addItemInTable(user item) throws ExecutionException, InterruptedException {
+      final MobileServiceList<user> result =
+              muser.where().field("userid").eq(item.getuid()).execute().get();
+      final MobileServiceList<fbuser> result1 =
+              otheruser.where().field("userid").eq(item.getuid()).execute().get();
+      if(result.isEmpty()&&result1.isEmpty()) {
+          user entity = muser.insert(item).get();
+          return entity;
+      }
+      else
+      {
+          return null;
+      }
     }
+
+
     /**
      * Add a new item
      *
@@ -258,56 +277,58 @@ public class EditActivity extends AppCompatActivity {
      *            The view that originated the call
      */
     public void uploadPhoto(View view) {
+        final user item1 = new user();
 
-        item.setname(pname.getText().toString());
-        item.setemail(pcontact.getText().toString());
-        item.setuid(Profile.getCurrentProfile().getId());
-        item.setImageUri(mPhotoFileUri.toString());
-
-        if (mClient == null) {
-            return;
-        }
-
-        // Create a new item
-        final user item = new user();
-        item.setContainerName("profileimages");
+        //item1.setText(pname.getText().toString());
+        item1.setContainerName("todoitemimages");
+       item1.setname(pname.getText().toString());
+        item1.setemail(pcontact.getText().toString());
+        item1.setuid(Profile.getCurrentProfile().getId());
+        item1.setImageUri(mPhotoFileUri.toString());
 
         // Use a unigue GUID to avoid collisions.
         UUID uuid = UUID.randomUUID();
         String uuidInString = uuid.toString();
-        item.setResourceName(uuidInString);
+        item1.setResourceName(uuidInString);
 
         // Send the item to be inserted. When blob properties are set this
         // generates an SAS in the response.
         new AsyncTask<Void, Void, Void>() {
             @Override
             protected Void doInBackground(Void... params) {
-                try{
-                    final user entity = addItemInTable(item);
+                try {
+                    final user entity = addItemInTable(item1);
+                    if (entity != null) {
+                        // If we have a returned SAS, then upload the blob.
+                        if (entity.getSasQueryString() != null) {
 
-                    // If we have a returned SAS, then upload the blob.
-                    if (entity.getSasQueryString() != null) {
+                            // Get the URI generated that contains the SAS
+                            // and extract the storage credentials.
+                            StorageCredentials cred =
+                                    new StorageCredentialsSharedAccessSignature(entity.getSasQueryString());
+                            URI imageUri = new URI(entity.getImageUri());
 
-                        // Get the URI generated that contains the SAS
-                        // and extract the storage credentials.
-                        StorageCredentials cred =
-                                new StorageCredentialsSharedAccessSignature(entity.getSasQueryString());
-                        URI imageUri = new URI(entity.getImageUri());
+                            // Upload the new image as a BLOB from a stream.
+                            CloudBlockBlob blobFromSASCredential =
+                                    new CloudBlockBlob(imageUri, cred);
 
-                        // Upload the new image as a BLOB from a stream.
-                        CloudBlockBlob blobFromSASCredential =
-                                new CloudBlockBlob(imageUri, cred);
+                            if (flag == 0)
+                                blobFromSASCredential.uploadFromFile(filePath);
+                            else
+                                blobFromSASCredential.uploadFromFile(mPhotoFileUri.getPath());
 
-                        blobFromSASCredential.uploadFromFile(mPhotoFileUri.getPath());
+
+                        }
+
+
                     }
-
-
-                } catch (final Exception e) {
+                }
+                    catch (final Exception e) {
                     new Exception("Error");
                 }
                 return null;
             }
-        };
+        }.execute();
 
 
 

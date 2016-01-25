@@ -1,9 +1,11 @@
 package com.goodsnextdoor.pooja.goodsnextdoor;
 
 import android.content.Intent;
+import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Bundle;
+import android.provider.DocumentsContract;
 import android.provider.MediaStore;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
@@ -24,6 +26,8 @@ public class PostActivity extends AppCompatActivity {
     TextView description;
     String category;
     Spinner dropdown;
+    public Uri mPhotoFileUri = null;
+    String filePath = "";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -59,7 +63,8 @@ public class PostActivity extends AppCompatActivity {
         intent.putExtra("category",category);
         intent.putExtra("item",item.getText().toString());
         intent.putExtra("description",description.getText().toString());
-
+        intent.putExtra("imageuri",mPhotoFileUri);
+        intent.putExtra("filepath",filePath);
 
 
         startActivity(intent);
@@ -71,10 +76,34 @@ public class PostActivity extends AppCompatActivity {
 
         if (requestCode == PICK_IMAGE_REQUEST && resultCode == RESULT_OK && data != null && data.getData() != null) {
 
-            Uri uri = data.getData();
+            mPhotoFileUri = data.getData();
+            String wholeID = DocumentsContract.getDocumentId(mPhotoFileUri);
+
+            // Split at colon, use second item in the array
+            String id = wholeID.split(":")[1];
+
+            String[] column = { MediaStore.Images.Media.DATA };
+
+            // where id is equal to
+            String sel = MediaStore.Images.Media._ID + "=?";
+
+            Cursor cursor = getContentResolver().
+                    query(MediaStore.Images.Media.EXTERNAL_CONTENT_URI,
+                            column, sel, new String[]{ id }, null);
+
+
+
+            int columnIndex = cursor.getColumnIndex(column[0]);
+
+            if (cursor.moveToFirst()) {
+                filePath = cursor.getString(columnIndex);
+            }
+            cursor.close();
+
+
 
             try {
-                Bitmap bitmap = MediaStore.Images.Media.getBitmap(getContentResolver(), uri);
+                Bitmap bitmap = MediaStore.Images.Media.getBitmap(getContentResolver(), mPhotoFileUri);
                 // Log.d(TAG, String.valueOf(bitmap));
 
                 ImageView imageView = (ImageView) findViewById(R.id.imageView);

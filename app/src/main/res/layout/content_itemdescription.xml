@@ -10,4 +10,51 @@
     tools:showIn="@layout/activity_itemdescription"
     tools:context="com.goodsnextdoor.pooja.goodsnextdoor.itemdescriptionActivity">
 
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/itemname"
+        android:layout_alignParentTop="true"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="24dp" />
+
+    <ImageView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/im"
+        android:layout_below="@+id/itemname"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="64dp"
+        android:maxHeight="50dp"
+        android:maxWidth="50dp" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Description :"
+        android:id="@+id/decription"
+        android:layout_below="@+id/im"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:layout_marginTop="94dp" />
+
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="click here to view owner details"
+        android:id="@+id/ownernext"
+        android:layout_below="@+id/decription"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="107dp"
+        android:backgroundTint="@android:color/transparent"
+        android:onClick="ownerdetails"
+        android:singleLine="true"
+        android:textColor="#15c4cd" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/desc"
+        android:layout_above="@+id/ownernext"
+        android:layout_centerHorizontal="true" />
 </RelativeLayout>

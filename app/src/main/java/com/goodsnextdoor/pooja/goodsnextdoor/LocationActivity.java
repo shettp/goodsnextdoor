@@ -34,13 +34,19 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.facebook.Profile;
+import com.microsoft.azure.storage.StorageCredentials;
+import com.microsoft.azure.storage.StorageCredentialsSharedAccessSignature;
+import com.microsoft.azure.storage.blob.CloudBlockBlob;
 import com.microsoft.windowsazure.mobileservices.MobileServiceClient;
 import com.microsoft.windowsazure.mobileservices.MobileServiceList;
 import com.microsoft.windowsazure.mobileservices.table.MobileServiceTable;
 
 import java.net.MalformedURLException;
+import java.net.URI;
 import java.util.List;
 import java.util.Locale;
+import java.util.UUID;
+import java.util.concurrent.ExecutionException;
 
 public class LocationActivity extends Activity implements LocationListener{
     protected LocationManager locationManager;
@@ -57,7 +63,7 @@ public class LocationActivity extends Activity implements LocationListener{
     TextView country;
     TextView tag,input;
     Profile d;
-    String cityName;
+    String cityName,mPhotoFileUri,filePath;
     String stateName;
     String countryName;
     private MobileServiceTable<item> mitem;
@@ -99,6 +105,9 @@ public class LocationActivity extends Activity implements LocationListener{
         it.setitem(item);
         category= getIntent().getStringExtra("category");
         it.setcategory(category);
+        mPhotoFileUri=getIntent().getStringExtra("imageuri");
+        it.setImageUri(mPhotoFileUri);
+        filePath=getIntent().getStringExtra("filepath");
         description= getIntent().getStringExtra("description");
         it.setdescription(description);
         city=(TextView)findViewById(R.id.city);
@@ -170,6 +179,13 @@ public class LocationActivity extends Activity implements LocationListener{
         tag.setVisibility(View.VISIBLE);
         input.setVisibility(View.VISIBLE);
     }
+
+    public item addItemInTable(item item) throws ExecutionException, InterruptedException {
+            item entity = mitem.insert(item).get();
+            return entity;
+        }
+
+
     public void submit(View v){
         if(flag==1)
         {
@@ -189,19 +205,52 @@ public class LocationActivity extends Activity implements LocationListener{
             it.setlongitude(longitude);
         }
 
+
+        //item1.setText(pname.getText().toString());
+        it.setContainerName("todoitemimages");;
+
+        // Use a unigue GUID to avoid collisions.
+        UUID uuid = UUID.randomUUID();
+        String uuidInString = uuid.toString();
+        it.setResourceName(uuidInString);
+
+        // Send the item to be inserted. When blob properties are set this
+        // generates an SAS in the response.
         new AsyncTask<Void, Void, Void>() {
             @Override
             protected Void doInBackground(Void... params) {
                 try {
-                    mitem.insert(it).get();
-                    }
-                catch (Exception exception) {
+                    final item entity = addItemInTable(it);
+
+                        // If we have a returned SAS, then upload the blob.
+                        if (entity.getSasQueryString() != null) {
+
+                            // Get the URI generated that contains the SAS
+                            // and extract the storage credentials.
+                            StorageCredentials cred =
+                                    new StorageCredentialsSharedAccessSignature(entity.getSasQueryString());
+                            URI imageUri = new URI(entity.getImageUri());
+
+                            // Upload the new image as a BLOB from a stream.
+                            CloudBlockBlob blobFromSASCredential =
+                                    new CloudBlockBlob(imageUri, cred);
+
+
+                                blobFromSASCredential.uploadFromFile(filePath);
+
+
+
+                        }
+
+
+
+                }
+                catch (final Exception e) {
                     new Exception("Error");
                 }
                 return null;
             }
         }.execute();
-
 
         // cancel the alert box and put a Toast to the user
         Toast.makeText(getApplicationContext(), "Your data is saved in the database",

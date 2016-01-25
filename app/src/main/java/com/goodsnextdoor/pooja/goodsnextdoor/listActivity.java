@@ -41,6 +41,7 @@ public class listActivity extends Activity {
     double latitude,longitude;
     String[] itemnames=new String[50];
     String[] itemcity=new String[50];
+    String[] imageuri=new String[50];
     Double[] lats=new Double[50];
     Double[] longs=new Double[50];
     float[] r =new float[50];
@@ -108,6 +109,8 @@ public class listActivity extends Activity {
                                         itemcity[j] = results.get(i).getcity().toString();
                                         lats[j] = results.get(i).getlatitude();
                                         longs[j] = results.get(i).getlongitude();
+                                        imageuri[j]=results.get(i).getImageUri();
+
                                         j = j + 1;
                                     }
                                 }
@@ -123,10 +126,13 @@ public class listActivity extends Activity {
                             for (int i = 0; i < results.size(); i++) {
                                 Location.distanceBetween(latitude,longitude,results.get(i).getlatitude(),results.get(i).getlongitude(),r);
                                 if(r[0]<1000) {
-                                    itemnames[i] = results.get(i).getname().toString();
-                                    itemcity[i] = results.get(i).getcity().toString();
-                                    lats[i] = results.get(i).getlatitude();
-                                    longs[i] = results.get(i).getlongitude();
+                                    itemnames[j] = results.get(i).getname().toString();
+                                    itemcity[j] = results.get(i).getcity().toString();
+                                    lats[j] = results.get(i).getlatitude();
+                                    longs[j] = results.get(i).getlongitude();
+                                    imageuri[j]=results.get(i).getImageUri();
+                                    j=j+1;
+
                                 }
 
                         }
