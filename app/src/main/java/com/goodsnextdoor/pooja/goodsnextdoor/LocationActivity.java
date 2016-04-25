@@ -66,6 +66,7 @@ public class LocationActivity extends Activity implements LocationListener{
     String cityName,mPhotoFileUri,filePath;
     String stateName;
     String countryName;
+    String type;
     private MobileServiceTable<item> mitem;
     private MobileServiceClient mClient;
     private static final long MIN_DISTANCE_CHANGE_FOR_UPDATES = 10; // 10 meters
@@ -95,12 +96,14 @@ public class LocationActivity extends Activity implements LocationListener{
         it.setuid(d.getId());
         try {
 
-            mClient = new MobileServiceClient("https://goodsnextdoorproject.azure-mobile.net/","wfPWzbslQQqWgCwgYRzGTzRbXeYBLj14",this);
+            mClient = new MobileServiceClient("https://goodsnextdoorcapstone.azure-mobile.net/","IrDKWwuYiCMcDatgBeOzklZKeOINDD73",this);
             // Get the Mobile Service Table instance to use
             mitem = mClient.getTable(item.class);
         } catch (MalformedURLException e) {
             new Exception("There was an error creating the Mobile Service. Verify the URL");
         }
+        type= getIntent().getStringExtra("type");
+        it.settype(type);
         item= getIntent().getStringExtra("item");
         it.setitem(item);
         category= getIntent().getStringExtra("category");
@@ -150,26 +153,67 @@ public class LocationActivity extends Activity implements LocationListener{
             }
         }
 
+
+
         isGPSEnabled = locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER);
         if (isGPSEnabled) {
             if (location == null) {
                 locationManager.requestLocationUpdates(
-                        LocationManager.GPS_PROVIDER,
-                        MIN_TIME_BW_UPDATES,
-                        MIN_DISTANCE_CHANGE_FOR_UPDATES, this);
+                        LocationManager.GPS_PROVIDER,MIN_TIME_BW_UPDATES,
+                        MIN_DISTANCE_CHANGE_FOR_UPDATES,this);
                 Log.d("GPS Enabled", "GPS Enabled");
                 if (locationManager != null) {
-                    location = locationManager
-                            .getLastKnownLocation(LocationManager.GPS_PROVIDER);
+
+                    List<String> providers = locationManager.getProviders(true);
+                    Location bestLocation = null;
+                    for (String provider : providers) {
+                        Location l = locationManager.getLastKnownLocation(provider);
+
+                        if (l == null) {
+                            continue;
+                        }
+                        if (bestLocation == null
+                                || l.getAccuracy() < bestLocation.getAccuracy()) {
+                            bestLocation = l;
+                        }
+                    }
+                    if (bestLocation == null) {
+                        location= null;
+                    }
+                    else
+                        location=bestLocation;
+                    //location = getLastKnownLocation();
                     if (location != null) {
                         latitude = location.getLatitude();
                         longitude = location.getLongitude();
+                        if (latitude != 0 && longitude != 0){
+                            try {
+                                Geocoder geocoder = new Geocoder(this, Locale.getDefault());
+                                List<Address> addresses = geocoder.getFromLocation(latitude, longitude, 1);
+                                cityName = addresses.get(0).getAddressLine(0);
+                                stateName = addresses.get(0).getAddressLine(1);
+                                countryName = addresses.get(0).getAddressLine(2);
+
+                                city.setText(cityName);
+                                state.setText(stateName);
+                                country.setText(countryName);
+                            }
+                            catch(Exception e)
+                            {
+
+                            }
+                            dialog.dismiss();
+                        }
                     }
                 }
             }
         }
     }
-
+    public void home(View v)
+    {
+        Intent  intent = new Intent(LocationActivity.this, optionsActivity.class);
+        startActivity(intent);
+    }
     public void yes(View v){
         flag=0;
     }
@@ -194,7 +238,7 @@ public class LocationActivity extends Activity implements LocationListener{
             it.setcountry("");
             it.setlongitude(longitude);
             it.setlatitude(latitude);
-
+            it.setstatus("available");
         }
         else
         {
@@ -203,6 +247,8 @@ public class LocationActivity extends Activity implements LocationListener{
             it.setcountry(countryName);
             it.setlatitude(latitude);
             it.setlongitude(longitude);
+            it.setstatus("available");
+
         }
 
 

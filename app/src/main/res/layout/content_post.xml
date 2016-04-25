@@ -8,12 +8,14 @@
     android:paddingBottom="@dimen/activity_vertical_margin"
     app:layout_behavior="@string/appbar_scrolling_view_behavior"
     tools:showIn="@layout/activity_post"
-    tools:context="com.goodsnextdoor.pooja.goodsnextdoor.PostActivity">
+
+    tools:context="com.goodsnextdoor.pooja.goodsnextdoor.PostActivity"
+    android:background="@drawable/yell">
     <Spinner
         android:id="@+id/spinner1"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@android:drawable/btn_dropdown"
+        android:background="#0dee85"
         android:spinnerMode="dropdown"
         android:layout_alignParentTop="true"
         android:layout_alignParentRight="true"
@@ -26,7 +28,10 @@
         android:text="Please select a category"
         android:id="@+id/textView3"
         android:layout_alignParentTop="true"
-        android:layout_centerHorizontal="true" />
+        android:layout_centerHorizontal="true"
+        style="@style/Base.DialogWindowTitle.AppCompat"
+        android:textColor="#070000"
+        android:textStyle="bold" />
 
     <TextView
         android:layout_width="wrap_content"
@@ -36,7 +41,9 @@
         android:layout_below="@+id/spinner1"
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true"
-        android:layout_marginTop="49dp" />
+        android:layout_marginTop="49dp"
+        android:textStyle="bold"
+        android:textColor="#050000" />
 
     <EditText
         android:layout_width="wrap_content"
@@ -44,46 +51,54 @@
         android:id="@+id/itemname"
         android:layout_alignBottom="@+id/textView4"
         android:layout_alignRight="@+id/spinner1"
-        android:layout_alignEnd="@+id/spinner1" />
+        android:layout_alignEnd="@+id/spinner1"
+        android:textStyle="bold" />
 
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Upload picture"
         android:id="@+id/textView5"
-        android:layout_centerVertical="true"
+        android:textColor="#040000"
+        android:textStyle="bold"
+        android:layout_marginTop="57dp"
+        android:layout_below="@+id/textView4"
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true" />
     <ImageView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:id="@+id/imageView"
-        android:layout_below="@+id/textView5"
+        android:layout_toRightOf="@+id/textView3"
+        android:layout_alignTop="@+id/choose"
         android:layout_alignBottom="@+id/choose"
-        android:layout_toRightOf="@+id/button2"
-        android:layout_alignRight="@+id/textView3"
-        android:layout_alignEnd="@+id/textView3" />
+        android:layout_alignRight="@+id/description"
+        android:layout_alignEnd="@+id/description" />
     <Button
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Choose"
+        android:layout_width="50dp"
+        android:layout_height="50dp"
         android:id="@+id/choose"
         android:onClick="Post"
+        android:textStyle="bold"
+        android:background="@drawable/gall"
         android:layout_below="@+id/textView5"
-        android:layout_alignRight="@+id/textView5"
-        android:layout_alignEnd="@+id/textView5" />
+        android:layout_toLeftOf="@+id/textView3"
+        android:layout_toStartOf="@+id/textView3" />
 
 
     <Button
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Next"
+        android:layout_width="50dp"
+        android:layout_height="50dp"
         android:id="@+id/button2"
         android:onClick="next"
+        android:layout_marginBottom="57dp"
         android:layout_alignParentBottom="true"
-        android:layout_toRightOf="@+id/textView4"
-        android:layout_toEndOf="@+id/textView4"
-        android:layout_marginBottom="56dp" />
+        android:layout_alignRight="@+id/description"
+        android:layout_alignEnd="@+id/description"
+        android:layout_marginRight="47dp"
+        android:layout_marginEnd="47dp"
+        android:textStyle="bold"
+        android:background="@drawable/nexaa" />
 
     <EditText
         android:layout_width="wrap_content"
@@ -94,7 +109,8 @@
         android:layout_above="@+id/button2"
         android:layout_toRightOf="@+id/textView4"
         android:layout_toEndOf="@+id/textView4"
-        android:layout_marginBottom="37dp" />
+        android:layout_marginBottom="37dp"
+        android:textStyle="bold" />
 
     <TextView
         android:layout_width="wrap_content"
@@ -103,6 +119,53 @@
         android:id="@+id/textView13"
         android:layout_alignBottom="@+id/description"
         android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true" />
+        android:layout_alignParentStart="true"
+        android:textStyle="bold"
+        android:textColor="#090000" />
+
+    <RadioButton
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Loan"
+        android:id="@+id/loan"
+        android:checked="false"
+        android:layout_alignBottom="@+id/button2"
+        android:layout_alignLeft="@+id/choose"
+        android:layout_alignStart="@+id/choose"
+        android:textStyle="bold" />
+
+    <RadioButton
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Give away"
+        android:id="@+id/give"
+        android:checked="false"
+        android:textStyle="bold"
+        android:layout_alignTop="@+id/loan"
+        android:layout_toRightOf="@+id/textView4"
+        android:layout_toEndOf="@+id/textView4" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Please select type of item"
+        android:id="@+id/textView17"
+        android:layout_above="@+id/button2"
+        android:layout_alignLeft="@+id/loan"
+        android:layout_alignStart="@+id/loan"
+        android:textStyle="bold"
+        android:textColor="#070000" />
+
+    <Button
+        android:layout_width="50dp"
+        android:layout_height="50dp"
+        android:id="@+id/button6"
+        android:background="@drawable/homepp"
+        android:onClick="home"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentEnd="true"
+        android:layout_alignBottom="@+id/textView3"
+        android:layout_toRightOf="@+id/description"
+        android:layout_toEndOf="@+id/description" />
 
 </RelativeLayout>

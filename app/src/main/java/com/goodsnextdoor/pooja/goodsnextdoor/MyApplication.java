@@ -6,6 +6,8 @@ import android.content.pm.Signature;
 import android.util.Base64;
 import android.util.Log;
 
+import com.urbanairship.UAirship;
+
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 
@@ -18,6 +20,14 @@ public class MyApplication extends Application{
     public void onCreate() {
         super.onCreate();
         printHashKey();
+        UAirship.takeOff(this, new UAirship.OnReadyCallback() {
+            @Override
+            public void onAirshipReady(UAirship airship) {
+
+                // Enable user notifications
+                airship.getPushManager().setUserNotificationsEnabled(true);
+            }
+        });
     }
 
     public void printHashKey(){

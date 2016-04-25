@@ -42,7 +42,7 @@ public class mypostsActivity extends Activity {
     String userid;
     double latitude,longitude;
     String[] itemnames=new String[50];
-    String[] itemcity=new String[50];
+    String[] description=new String[50];
     String[] imageuri=new String[50];
     Double[] lats=new Double[50];
     Double[] longs=new Double[50];
@@ -80,7 +80,7 @@ public class mypostsActivity extends Activity {
         try {
 
 
-            mClient = new MobileServiceClient("https://goodsnextdoorproject.azure-mobile.net/", "wfPWzbslQQqWgCwgYRzGTzRbXeYBLj14", this);
+            mClient = new MobileServiceClient("https://goodsnextdoorcapstone.azure-mobile.net/", "IrDKWwuYiCMcDatgBeOzklZKeOINDD73", this);
 
             // Get the Mobile Service Table instance to use
             mitem = mClient.getTable(item.class);
@@ -111,7 +111,7 @@ public class mypostsActivity extends Activity {
                     for (int i=0;i<results.getTotalCount();i++)
                     {
                         itemnames[i]=results.get(i).getname();
-                        itemcity[i]=results.get(i).getcity();
+                        description[i]=results.get(i).getdescription();
                     }
 
                     runOnUiThread(new Runnable() {
@@ -122,8 +122,8 @@ public class mypostsActivity extends Activity {
 
                             for (int i = 0; i < results.getTotalCount(); i++) {
                                 HashMap<String, String> hm = new HashMap<String, String>();
-                                hm.put("item", itemnames[i]+"     "+itemcity[i]);
-                                hm.put("city", itemcity[i]);
+                                hm.put("item", itemnames[i]+": "+description[i]);
+                                hm.put("description", description[i]);
                                 aList.add(hm);
                             }
 
@@ -154,13 +154,15 @@ public class mypostsActivity extends Activity {
 
                                     // Getting the Country TextView
                                     TextView tvCountry = (TextView) linearLayoutChild.getChildAt(0);
+                                    String iname=tvCountry.getText().toString().split(": ")[0];
+                                    String ides=tvCountry.getText().toString().split(": ")[1];
+
                                     tvCountry.setTypeface(null, Typeface.BOLD);
-                                    Intent intent = new Intent(mypostsActivity.this, itemdescriptionActivity.class);
-
-                                    //intent.putExtra("fname",message);
-
+                                    Intent intent = new Intent(mypostsActivity.this, deletepostActivity.class);
+                                    intent.putExtra("itemname",iname);
+                                    intent.putExtra("description",ides);
+                                    
                                     startActivity(intent);
-                                    //Toast.makeText(getBaseContext(), tvCountry.getText().toString(), Toast.LENGTH_SHORT).show();
                                 }
                             };
 
@@ -188,6 +190,14 @@ public class mypostsActivity extends Activity {
 
 
     }
-
-
+    public void home(View v)
+    {
+        Intent  intent = new Intent(mypostsActivity.this, optionsActivity.class);
+        startActivity(intent);
+    }
+public void add(View v)
+{
+    Intent intent = new Intent(mypostsActivity.this, PostActivity.class);
+    startActivity(intent);
+}
 }

@@ -26,11 +26,13 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.facebook.Profile;
+import com.google.android.gms.maps.CameraUpdate;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
+import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
@@ -78,7 +80,7 @@ public class MapsActivity extends FragmentActivity implements GoogleMap.OnInfoWi
         try {
 
 
-            mClient = new MobileServiceClient("https://goodsnextdoorproject.azure-mobile.net/", "wfPWzbslQQqWgCwgYRzGTzRbXeYBLj14", this);
+            mClient = new MobileServiceClient("https://goodsnextdoorcapstone.azure-mobile.net/", "IrDKWwuYiCMcDatgBeOzklZKeOINDD73", this);
 
             // Get the Mobile Service Table instance to use
             mitem = mClient.getTable(item.class);
@@ -211,6 +213,9 @@ public class MapsActivity extends FragmentActivity implements GoogleMap.OnInfoWi
             mMap.setOnInfoWindowClickListener(this);
             k=k+1;
         }
-        mMap.moveCamera(CameraUpdateFactory.newLatLng(sydney));
+        CameraPosition cameraPosition = new CameraPosition.Builder().target(sydney).zoom(15.0f).build();
+        CameraUpdate cameraUpdate = CameraUpdateFactory.newCameraPosition(cameraPosition);
+        mMap.moveCamera(cameraUpdate);
+       // mMap.moveCamera(CameraUpdateFactory.newLatLng(sydney));
     }
 }

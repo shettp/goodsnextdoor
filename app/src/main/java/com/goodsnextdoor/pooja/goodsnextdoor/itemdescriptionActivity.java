@@ -45,6 +45,8 @@ public class itemdescriptionActivity extends AppCompatActivity {
     String item;
     TextView dec,itemname;
     ImageView img;
+    TextView type;
+    TextView status;
     private MobileServiceTable<item> mitem;
     private MobileServiceClient mClient;
     URI uri;
@@ -57,75 +59,79 @@ public class itemdescriptionActivity extends AppCompatActivity {
         description= getIntent().getStringExtra("description");
         item = getIntent().getStringExtra("itemname");
         dec=(TextView)findViewById(R.id.desc);
+        type=(TextView)findViewById(R.id.type);
         itemname=(TextView)findViewById(R.id.itemname);
+        status=(TextView)findViewById(R.id.status);
         img=(ImageView)findViewById(R.id.im);
         try {
 
 
 
-            mClient = new MobileServiceClient("https://goodsnextdoorproject.azure-mobile.net/","wfPWzbslQQqWgCwgYRzGTzRbXeYBLj14",this);
+        mClient = new MobileServiceClient("https://goodsnextdoorcapstone.azure-mobile.net/","IrDKWwuYiCMcDatgBeOzklZKeOINDD73",this);
 
-            // Get the Mobile Service Table instance to use
-            mitem = mClient.getTable(item.class);
+        // Get the Mobile Service Table instance to use
+        mitem = mClient.getTable(item.class);
         } catch (MalformedURLException e) {
-            new Exception("There was an error creating the Mobile Service. Verify the URL");
+        new Exception("There was an error creating the Mobile Service. Verify the URL");
         }
 
         AsyncTask<Void, Void, Void> task = new AsyncTask<Void, Void, Void>()  {
 
-            @Override
-            protected void onPreExecute() {
-                super.onPreExecute();
-                Log.e("AsyncTask", "onPreExecute");
-            }
-            @Override
-            protected Void doInBackground(Void... params) {
+@Override
+protected void onPreExecute() {
+        super.onPreExecute();
+        Log.e("AsyncTask", "onPreExecute");
+        }
+@Override
+protected Void doInBackground(Void... params) {
 
-                try {
+        try {
 
-                    results = mitem.where().field("item").eq(item).and().field("description").eq(description).execute().get();
+        results = mitem.where().field("item").eq(item).and().field("description").eq(description).execute().get();
 
-                    runOnUiThread(new Runnable() {
+        runOnUiThread(new Runnable() {
 
-                        @Override
-                        public void run() {
-                            itemname.setText(results.get(0).getname().toString());
-                            dec.setText(results.get(0).getdescription().toString());
-                            String u=results.get(0).getImageUri();
-                            try {
-                                uri = new URI(results.get(0).getImageUri().toString());
-                            } catch (URISyntaxException e) {
-                                e.printStackTrace();
-                            }
+@Override
+public void run() {
+        itemname.setText(results.get(0).getname().toString());
+    dec.setText(results.get(0).getdescription().toString());
+    type.setText(results.get(0).gettype().toString());
+        status.setText(results.get(0).getstatus().toString());
+        String u=results.get(0).getImageUri();
+        try {
+        uri = new URI(results.get(0).getImageUri().toString());
+        } catch (URISyntaxException e) {
+        e.printStackTrace();
+        }
 
-                            try {
-                                 urll = uri.toURL();
-                            } catch (IllegalArgumentException e) {
-                                e.printStackTrace();
-                            } catch (MalformedURLException e) {
-                                e.printStackTrace();
-                            }
-                            try {
+        try {
+        urll = uri.toURL();
+        } catch (IllegalArgumentException e) {
+        e.printStackTrace();
+        } catch (MalformedURLException e) {
+        e.printStackTrace();
+        }
+        try {
 
-                                String[] params = new String[]{urll.toString()};
-                                new DownloadImageTask().execute(urll.toString());
+        String[] params = new String[]{urll.toString()};
+        new DownloadImageTask().execute(urll.toString());
 
-                            }
-                            catch (Exception e)
-                            {
-                                throw new RuntimeException(e);
+        }
+        catch (Exception e)
+        {
+        throw new RuntimeException(e);
 
-                            }
+        }
 
-                           // img.setImageURI(Uri.parse(u));
-                        }
-                    });
-                } catch (Exception e) {
-                    e.printStackTrace();
-                    throw new RuntimeException(e);
-                }
-                return null;
-            }
+        // img.setImageURI(Uri.parse(u));
+        }
+        });
+        } catch (Exception e) {
+        e.printStackTrace();
+        throw new RuntimeException(e);
+        }
+        return null;
+        }
 
         };
 
@@ -133,27 +139,36 @@ public class itemdescriptionActivity extends AppCompatActivity {
 
         task.execute();
 
-    }
-
-    public void ownerdetails(View view)
+        }
+    public void home(View v)
     {
-        Intent  intent = new Intent(itemdescriptionActivity.this, ownerprofileActivity.class);
-        intent.putExtra("ownerid", results.get(0).getuid());
+        Intent  intent = new Intent(itemdescriptionActivity.this, optionsActivity.class);
         startActivity(intent);
     }
-    private class DownloadImageTask extends AsyncTask<String,Void, Bitmap> {
-        @Override
-        protected Bitmap doInBackground(String[] params) {
-            String[] urls =(String[]) params;
-            return loadImageFromNetwork(urls[0]);
-        }
-        @Override
-        protected void onPostExecute(Bitmap result ) {
-            img.setImageBitmap(Bitmap.createScaledBitmap(result,300,300, false));
-        }
+public void ownerdetails(View view)
+        {
+        Intent  intent = new Intent(itemdescriptionActivity.this, ownerprofileActivity.class);
+        intent.putExtra("ownerid", results.get(0).getuid());
+            intent.putExtra("item",results.get(0).getname());
+            intent.putExtra("description",results.get(0).getdescription());
+            intent.putExtra("category",results.get(0).getcategory());
+            intent.putExtra("type",type.getText().toString());
 
-
+        startActivity(intent);
+        }
+private class DownloadImageTask extends AsyncTask<String,Void, Bitmap> {
+    @Override
+    protected Bitmap doInBackground(String[] params) {
+        String[] urls =(String[]) params;
+        return loadImageFromNetwork(urls[0]);
     }
+    @Override
+    protected void onPostExecute(Bitmap result ) {
+        img.setImageBitmap(Bitmap.createScaledBitmap(result,300,300, false));
+    }
+
+
+}
 
     public final  Bitmap loadImageFromNetwork(String urlString){
         try {

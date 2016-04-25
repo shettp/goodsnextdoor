@@ -42,10 +42,15 @@ public class searchActivity extends AppCompatActivity {
         setContentView(R.layout.activity_search);
         dropdown = (Spinner) findViewById(R.id.spinner1);
         itemname=(TextView)findViewById(R.id.itemname);
-        String[] items = new String[]{"Cell Phones", "Yard Equipment", "Computers", "Electronics", "Furniture", "Bicycles"};
+        String[] items = new String[]{"All","Cell Phones", "Yard Equipment", "Computers", "Electronics", "Furniture", "Bicycles"};
         ArrayAdapter<String> adapter = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_dropdown_item, items);
         dropdown.setAdapter(adapter);
 
+    }
+    public void home(View v)
+    {
+        Intent  intent = new Intent(searchActivity.this, optionsActivity.class);
+        startActivity(intent);
     }
     public void sear(View view)
 

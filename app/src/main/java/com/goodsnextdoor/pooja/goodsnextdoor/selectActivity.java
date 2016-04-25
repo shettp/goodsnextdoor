@@ -74,7 +74,7 @@ public class selectActivity extends Activity implements LocationListener {
 
 
 
-            mClient = new MobileServiceClient("https://goodsnextdoorproject.azure-mobile.net/","wfPWzbslQQqWgCwgYRzGTzRbXeYBLj14",this);
+            mClient = new MobileServiceClient("https://goodsnextdoorcapstone.azure-mobile.net/","IrDKWwuYiCMcDatgBeOzklZKeOINDD73",this);
 
             // Get the Mobile Service Table instance to use
             mitem = mClient.getTable(item.class);
@@ -127,17 +127,58 @@ public class selectActivity extends Activity implements LocationListener {
                         MIN_DISTANCE_CHANGE_FOR_UPDATES, this);
                 Log.d("GPS Enabled", "GPS Enabled");
                 if (locationManager != null) {
-                    location = locationManager
-                            .getLastKnownLocation(LocationManager.GPS_PROVIDER);
+
+                    List<String> providers = locationManager.getProviders(true);
+                    Location bestLocation = null;
+                    for (String provider : providers) {
+                        Location l = locationManager.getLastKnownLocation(provider);
+
+                        if (l == null) {
+                            continue;
+                        }
+                        if (bestLocation == null
+                                || l.getAccuracy() < bestLocation.getAccuracy()) {
+                            bestLocation = l;
+                        }
+                    }
+                    if (bestLocation == null) {
+                        location= null;
+                    }
+                    else
+                        location=bestLocation;
+
                     if (location != null) {
                         latitude = location.getLatitude();
                         longitude = location.getLongitude();
+                        if (latitude != 0 && longitude != 0){
+                            try {
+                                Geocoder geocoder = new Geocoder(this, Locale.getDefault());
+                                List<Address> addresses = geocoder.getFromLocation(latitude, longitude, 1);
+                                cityName = addresses.get(0).getAddressLine(0);
+                                stateName = addresses.get(0).getAddressLine(1);
+                                countryName = addresses.get(0).getAddressLine(2);
+
+                                // city.setText(cityName);
+                                //state.setText(stateName);
+                                //country.setText(countryName);
+                            }
+                            catch(Exception e)
+                            {
+
+                            }
+                            dialog.dismiss();
+                        }
                     }
                 }
             }
         }
     }
 
+    public void home(View v)
+    {
+        Intent  intent = new Intent(selectActivity.this, optionsActivity.class);
+        startActivity(intent);
+    }
     @Override
     public void onLocationChanged(Location location) {
         // TODO Auto-generated method stub
@@ -152,7 +193,7 @@ public class selectActivity extends Activity implements LocationListener {
                 stateName = addresses.get(0).getAddressLine(1);
                 countryName = addresses.get(0).getAddressLine(2);
 
-               // city.setText(cityName);
+                // city.setText(cityName);
                 //state.setText(stateName);
                 //country.setText(countryName);
             }

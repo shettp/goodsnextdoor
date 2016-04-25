@@ -1,5 +1,4 @@
 package com.goodsnextdoor.pooja.goodsnextdoor;
-
 import android.app.Application;
 import android.test.ApplicationTestCase;
 
@@ -10,4 +9,9 @@ public class ApplicationTest extends ApplicationTestCase<Application> {
     public ApplicationTest() {
         super(Application.class);
     }
+    @Test
+    public void emailValidator_CorrectEmailSimple_ReturnsTrue() {
+        assertThat(EmailValidator.isValidEmail("name@email.com"), is(true));
+    }
+
 }

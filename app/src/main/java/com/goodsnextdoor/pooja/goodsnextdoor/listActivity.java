@@ -40,6 +40,7 @@ public class listActivity extends Activity {
     item it=new item();
     double latitude,longitude;
     String[] itemnames=new String[50];
+    String[] description=new String[50];
     String[] itemcity=new String[50];
     String[] imageuri=new String[50];
     Double[] lats=new Double[50];
@@ -69,7 +70,7 @@ public class listActivity extends Activity {
         try {
 
 
-            mClient = new MobileServiceClient("https://goodsnextdoorproject.azure-mobile.net/", "wfPWzbslQQqWgCwgYRzGTzRbXeYBLj14", this);
+            mClient = new MobileServiceClient("https://goodsnextdoorcapstone.azure-mobile.net/", "IrDKWwuYiCMcDatgBeOzklZKeOINDD73", this);
 
             // Get the Mobile Service Table instance to use
             mitem = mClient.getTable(item.class);
@@ -107,6 +108,7 @@ public class listActivity extends Activity {
                                     if(r[0]<1000) {
                                         itemnames[j] = results.get(i).getname().toString();
                                         itemcity[j] = results.get(i).getcity().toString();
+                                        description[j] = results.get(i).getdescription().toString();
                                         lats[j] = results.get(i).getlatitude();
                                         longs[j] = results.get(i).getlongitude();
                                         imageuri[j]=results.get(i).getImageUri();
@@ -128,6 +130,7 @@ public class listActivity extends Activity {
                                 if(r[0]<1000) {
                                     itemnames[j] = results.get(i).getname().toString();
                                     itemcity[j] = results.get(i).getcity().toString();
+                                    description[j] = results.get(i).getdescription().toString();
                                     lats[j] = results.get(i).getlatitude();
                                     longs[j] = results.get(i).getlongitude();
                                     imageuri[j]=results.get(i).getImageUri();
@@ -146,8 +149,8 @@ public class listActivity extends Activity {
 
                                 for (int i = 0; i < totalitems; i++) {
                                     HashMap<String, String> hm = new HashMap<String, String>();
-                                    hm.put("item", itemnames[i]+"     "+itemcity[i]);
-                                    hm.put("city", itemcity[i]);
+                                    hm.put("item", itemnames[i]+": "+description[i]);
+                                    hm.put("description", description[i]);
                                     aList.add(hm);
                                 }
 
@@ -179,9 +182,12 @@ public class listActivity extends Activity {
                                         // Getting the Country TextView
                                         TextView tvCountry = (TextView) linearLayoutChild.getChildAt(0);
                                         tvCountry.setTypeface(null, Typeface.BOLD);
+                                        String iname=tvCountry.getText().toString().split(": ")[0];
+                                        String idesc=tvCountry.getText().toString().split(": ")[1];
                                         Intent intent = new Intent(listActivity.this, itemdescriptionActivity.class);
 
-                                        //intent.putExtra("fname",message);
+                                        intent.putExtra("itemname",iname);
+                                        intent.putExtra("description",idesc);
 
                                         startActivity(intent);
                                         //Toast.makeText(getBaseContext(), tvCountry.getText().toString(), Toast.LENGTH_SHORT).show();
@@ -212,6 +218,61 @@ public class listActivity extends Activity {
 
 
         }
+    public String casesensitivecheck(String itemname)
+    {
+        return itemname.toLowerCase();
+    }
+    public boolean nullitem(String itemname)
+    {
 
+                if(itemname=="")
+                    return true;
+        else
+                    return false;
+    }
+    public boolean isdatefromnull(String from,String to)
+    {
+        if(from=="")
+        {
+            return true;
+        }
+        return false;
+    }
+    public boolean isdateto(String from,String to)
+    {
+        if(to=="")
+        {
+            return true;
+        }
+        return false;
+    }
+    public boolean daterange(String from,String to)
+    {
+        if(Integer.parseInt(from.split("/")[0])>Integer.parseInt(to.split("/")[0]))
+        {
+            return false;
+        }
+        return true;
+    }
+    public boolean nameisnull(String name)
+    {
+        if(name=="")
+        return true;
+        else
+            return false;
+    }
+    public boolean itemhaspecial(String itemname)
+    {
+
+        if(itemname.contains("%"))
+            return true;
+        else
+            return false;
+    }
+    public void home(View v)
+    {
+        Intent  intent = new Intent(listActivity.this, optionsActivity.class);
+        startActivity(intent);
+    }
 
 }

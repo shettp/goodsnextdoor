@@ -1,43 +1,125 @@
 <LinearLayout
     android:orientation="vertical"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content"
+    android:layout_height="match_parent"
     android:padding="10dp"
     android:layout_centerInParent="true"
 
-    xmlns:android="http://schemas.android.com/apk/res/android">
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:weightSum="1"
+    android:id="@+id/imag"
+    android:background="@drawable/yell">
 
 
-    <Button
+    <ImageButton
+        android:layout_width="68dp"
+        android:layout_height="67dp"
+        android:id="@+id/imagesearch"
+        android:clickable="true"
+        android:onClick="search"
+        android:src="@drawable/searchan"
+        android:layout_gravity="right" />
+
+   <!-- <Button
         android:id="@+id/Profile"
         android:layout_width="wrap_content"
         android:padding="10dp"
         android:layout_height="wrap_content"
         android:onClick="profile"
-        android:text="Profile" />
+        android:text="Profile"
+        android:layout_gravity="right" />-->
 
-    <Button
+    <!--  <Button
         android:id="@+id/search"
         android:layout_width="wrap_content"
         android:padding="10dp"
         android:layout_height="wrap_content"
         android:onClick="search"
-        android:text="Search" />
+        android:text="Search"
+        android:layout_gravity="right" />-->
 
-    <Button
+    <!--  <Button
         android:id="@+id/post"
         android:layout_width="wrap_content"
         android:padding="10dp"
         android:layout_height="wrap_content"
         android:onClick="Post"
-        android:text="Post" />
+        android:text="Post"
+        android:layout_gravity="right" />-->
 
+    <ImageButton
+        android:layout_width="68dp"
+        android:layout_height="67dp"
+        android:id="@+id/imagepost"
+        android:scaleType="fitCenter"
+        android:padding="0dp"
+        android:onClick="Post"
+        android:adjustViewBounds="true"
+        android:clickable="true"
+        android:src="@drawable/give"
+        android:layout_gravity="right" />
+
+    <ImageButton
+        android:layout_width="68dp"
+        android:layout_height="67dp"
+        android:id="@+id/imageprofile"
+        android:scaleType="fitCenter"
+        android:padding="0dp"
+        android:onClick="profile"
+        android:adjustViewBounds="true"
+        android:clickable="true"
+        android:src="@drawable/useran"
+        android:layout_gravity="right" />
+<!--
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="My request status"
+        android:onClick="choice"
+        android:id="@+id/request"
+        android:visibility="invisible"
+        android:layout_gravity="right" />-->
+
+    <ImageButton
+        android:layout_width="68dp"
+        android:layout_height="67dp"
+        android:id="@+id/imagerequest"
+        android:scaleType="fitCenter"
+        android:padding="0dp"
+        android:onClick="choice"
+        android:adjustViewBounds="true"
+        android:clickable="true"
+        android:src="@drawable/messplus"
+        android:layout_gravity="right" />
+<!--
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="loan"
+        android:onClick="loanoptions"
+        android:id="@+id/loan"
+        android:visibility="invisible" />-->
+<!--
     <Button
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Manage my Posts"
         android:onClick="mypost"
-        android:id="@+id/manage" />
+        android:id="@+id/manage"
+        android:visibility="invisible"
+        android:layout_gravity="right" />-->
+
+    <ImageButton
+        android:layout_width="68dp"
+        android:layout_height="67dp"
+        android:id="@+id/imagemanage"
+        android:scaleType="fitCenter"
+        android:padding="0dp"
+        android:onClick="mypost"
+        android:adjustViewBounds="true"
+        android:clickable="true"
+        android:src="@drawable/settingsan"
+        android:layout_gravity="right" />
 
 
 </LinearLayout>

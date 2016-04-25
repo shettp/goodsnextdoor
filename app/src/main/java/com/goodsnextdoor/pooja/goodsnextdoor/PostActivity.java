@@ -15,6 +15,7 @@ import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.RadioButton;
 import android.widget.Spinner;
 import android.widget.TextView;
 
@@ -28,12 +29,15 @@ public class PostActivity extends AppCompatActivity {
     Spinner dropdown;
     public Uri mPhotoFileUri = null;
     String filePath = "";
+    RadioButton give,loan;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_post);
         item=(TextView)findViewById(R.id.itemname);
+        give=(RadioButton)findViewById(R.id.give);
+        loan=(RadioButton)findViewById(R.id.loan);
         description=(TextView)findViewById(R.id.description);
         dropdown = (Spinner)findViewById(R.id.spinner1);
         String[] items = new String[]{"Cell Phones", "Yard Equipment", "Computers", "Electronics", "Furniture", "Bicycles"};
@@ -55,11 +59,23 @@ public class PostActivity extends AppCompatActivity {
         });
 
     }
-
+    public void home(View v)
+    {
+        Intent  intent = new Intent(PostActivity.this, optionsActivity.class);
+        startActivity(intent);
+    }
     public void next(View view)
     {
         Intent  intent = new Intent(PostActivity.this, LocationActivity.class);
         category=dropdown.getSelectedItem().toString();
+        if(give.isChecked())
+        {
+            intent.putExtra("type","giveaway");
+        }
+        else
+        {
+            intent.putExtra("type","loan");
+        }
         intent.putExtra("category",category);
         intent.putExtra("item",item.getText().toString());
         intent.putExtra("description",description.getText().toString());

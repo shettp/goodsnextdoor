@@ -1,7 +1,9 @@
 package com.goodsnextdoor.pooja.goodsnextdoor;
 
+import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
@@ -12,10 +14,13 @@ import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
-
+import android.widget.Toast;
+import android.provider.Settings.Secure;
+import com.facebook.Profile;
 import com.microsoft.windowsazure.mobileservices.MobileServiceClient;
 import com.microsoft.windowsazure.mobileservices.MobileServiceList;
 import com.microsoft.windowsazure.mobileservices.table.MobileServiceTable;
+import com.urbanairship.UAirship;
 
 import java.net.MalformedURLException;
 import java.net.URI;
@@ -26,30 +31,54 @@ public class ownerprofileActivity extends AppCompatActivity {
      String ownerid;
     private MobileServiceTable<user> muser;
     private MobileServiceTable<fbuser> mfbuser;
+    private MobileServiceTable<requestitem> mreq;
     private MobileServiceClient mClient;
+    String email;
+    Profile d;
+    requestitem m=new requestitem();
     TextView name,contact;
     ImageView pic;
+    String type,itemname,category,desc;
     MobileServiceList<user> results;
     MobileServiceList<fbuser> results1;
+    String channelid;
     URI uri;
     URL urll;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_ownerprofile);
+        Profile.fetchProfileForCurrentAccessToken();
+        Profile p=Profile.getCurrentProfile();
+        while(p==null) {
+            try {
+                Thread.sleep(2000);
+                Profile.fetchProfileForCurrentAccessToken();
+                p=Profile.getCurrentProfile();
+            } catch (Exception e) {
+                Log.d("Exeption", e.toString());
+            }
+        }
+        d=p.getCurrentProfile();
         ownerid=getIntent().getStringExtra("ownerid");
+        itemname=getIntent().getStringExtra("item");
+        category=getIntent().getStringExtra("category");
+        desc=getIntent().getStringExtra("description");
         name=(TextView)findViewById(R.id.name);
         contact=(TextView)findViewById(R.id.contact);
         pic=(ImageView)findViewById(R.id.pic);
+        type=getIntent().getStringExtra("type");
         try {
 
 
 
-            mClient = new MobileServiceClient("https://goodsnextdoorproject.azure-mobile.net/","wfPWzbslQQqWgCwgYRzGTzRbXeYBLj14",this);
+            mClient = new MobileServiceClient("https://goodsnextdoorcapstone.azure-mobile.net/","IrDKWwuYiCMcDatgBeOzklZKeOINDD73",this);
 
             // Get the Mobile Service Table instance to use
             muser = mClient.getTable(user.class);
             mfbuser = mClient.getTable(fbuser.class);
+            mreq = mClient.getTable(requestitem.class);
+
         } catch (MalformedURLException e) {
             new Exception("There was an error creating the Mobile Service. Verify the URL");
         }
@@ -155,6 +184,11 @@ public class ownerprofileActivity extends AppCompatActivity {
 
         }
 
+    public void home(View v)
+    {
+        Intent  intent = new Intent(ownerprofileActivity.this, optionsActivity.class);
+        startActivity(intent);
+    }
     private class DownloadImageTask extends AsyncTask<String,Void, Bitmap> {
         @Override
         protected Bitmap doInBackground(String[] params) {
@@ -182,5 +216,79 @@ public class ownerprofileActivity extends AppCompatActivity {
 
     }
 
+public void check(View v) {
 
+    if (type.equals("loan")) {
+        Intent intent = new Intent(ownerprofileActivity.this, loanrequestActivity.class);
+        if (!results.isEmpty()) {
+            intent.putExtra("userid", results.get(0).getuid());
+
+            email=results.get(0).getemail();
+            channelid=results.get(0).getChannelid();
+        }
+        else {
+            intent.putExtra("userid", results1.get(0).getuid());
+            email=results1.get(0).getemail();
+            channelid=results1.get(0).getchannelid();
+        }
+        intent.putExtra("item", itemname);
+        intent.putExtra("category", category);
+        intent.putExtra("description", desc);
+        intent.putExtra("type", type);
+        intent.putExtra("contact", email);
+        intent.putExtra("channelid",channelid);
+        startActivity(intent);
+    } else {
+        if (!results.isEmpty()) {
+            m.setouid(results.get(0).getuid());
+
+            email=results.get(0).getemail();
+        }
+        else {
+            m.setouid(results1.get(0).getuid());
+            email=results1.get(0).getemail();
+            channelid=results1.get(0).getchannelid();
+        }
+        m.setitem(itemname);
+        m.setcategory(category);
+        m.setdescription(desc);
+        m.setuid(d.getId().toString());
+        m.setrequsetername(d.getName());
+        m.settype(type);
+        new AsyncTask<Void, Void, Void>() {
+            @Override
+            protected Void doInBackground(Void... params) {
+                try {
+
+
+                    mreq.insert(m).get();
+
+
+                }
+                catch (final Exception e) {
+                    new Exception("Error");
+                }
+                return null;
+            }
+        }.execute();
+
+        UAirship.shared().getPushManager().getNamedUser().setId(channelid);
+        PushSender p=new PushSender();
+        String message="Hi, I am " +d.getName()+" I am requesting this item. If it is still available please contact me.";
+        p.sendPush(channelid,message);
+        /*
+        Intent i = new Intent(Intent.ACTION_SEND);
+        i.setType("text/plain");
+        i.putExtra(Intent.EXTRA_EMAIL,new String[] { email });
+        i.putExtra(Intent.EXTRA_SUBJECT, "Requesting item " + m.getname());
+        i.putExtra(Intent.EXTRA_TEXT, "Hi, I am requesting this item. If it is still available please contact me.");
+        try {
+            startActivity(Intent.createChooser(i, "Send mail..."));
+        } catch (android.content.ActivityNotFoundException ex) {
+            Toast.makeText(ownerprofileActivity.this, "There are no email clients installed.", Toast.LENGTH_SHORT).show();
+        }
+        */
+
+    }
+}
 }

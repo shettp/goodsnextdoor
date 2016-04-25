@@ -17,5 +17,27 @@
     <string name="title_activity_maps">Map</string>
     <string name="title_activity_ownerprofile">ownerprofileActivity</string>
     <string name="title_activity_myposts">mypostsActivity</string>
-
+    <string name="title_activity_deletepost">deletepostActivity</string>
+    <string name="title_activity_loanoptions">loanoptionsActivity</string>
+    <string name="title_activity_loaner">loanerActivity</string>
+    <string name="title_activity_loanee">loaneeActivity</string>
+    <string name="title_activity_loanerlocation">loanerlocationActivity</string>
+    <string name="title_activity_loaneroption">loaneroptionActivity</string>
+    <string name="title_activity_loanitemlist">loanitemlistActivity</string>
+    <string name="title_activity_loanitemdescription">loanitemdescriptionActivity</string>
+    <string name="title_activity_loanerprofile">loanerprofileActivity</string>
+    <string name="title_activity_loanrequest">loanrequestActivity</string>
+    <string name="from_date">From Date</string>
+    <string name="to_date">To Date</string>
+    <string name="title_activity_manageeloanitem">manageeloanitemActivity</string>
+    <string name="title_activity_ownercontrol">ownercontrolActivity</string>
+    <string name="title_activity_loancontrol">loancontrolActivity</string>
+    <string name="title_activity_choice">choiceActivity</string>
+    <string name="title_activity_requests">requestsActivity</string>
+    <string name="title_activity_requesterprofile">requesterprofileActivity</string>
+    <string name="title_activity_position">positionActivity</string>
+    <string name="title_activity_main">MainActivity</string>
+    <string name="title_activity_notification">NotificationActivity</string>
+    <string name="title_activity_do_something">DoSomethingActivity</string>
+    <string name="title_activity_note">noteActivity</string>
 </resources>

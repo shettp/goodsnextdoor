@@ -134,7 +134,7 @@ public class LoginActivityFragment extends Fragment {
         try {
 // Create the Mobile Service Client instance, using the provided
 // Mobile Service URL and key
-            mClient = new MobileServiceClient("https://goodsnextdoorproject.azure-mobile.net/","wfPWzbslQQqWgCwgYRzGTzRbXeYBLj14",this.getContext());
+            mClient = new MobileServiceClient("https://goodsnextdoorcapstone.azure-mobile.net/","IrDKWwuYiCMcDatgBeOzklZKeOINDD73",this.getContext());
 
             // Get the Mobile Service Table instance to use
             muser = mClient.getTable(user.class);

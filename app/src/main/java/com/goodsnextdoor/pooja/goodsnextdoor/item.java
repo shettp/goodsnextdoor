@@ -16,7 +16,8 @@ public class item {
     @com.google.gson.annotations.SerializedName("id")
     private String mId;
 
-
+    @com.google.gson.annotations.SerializedName("type")
+    private String mtype;
     @com.google.gson.annotations.SerializedName("category")
     private String mcategory;
 
@@ -37,6 +38,8 @@ public class item {
 
     @com.google.gson.annotations.SerializedName("country")
     private String mcountry;
+    @com.google.gson.annotations.SerializedName("status")
+    private String mstatus;
 
     /**
      * Indicates if the item is completed
@@ -62,6 +65,8 @@ public class item {
         mResourceName = "";
         mImageUri = "";
         mSasQueryString = "";
+        mtype="";
+        mstatus="";
     }
 
 
@@ -76,7 +81,7 @@ public class item {
                 String state,String country,String containerName,
                 String resourceName,
                 String imageUri,
-                String sasQueryString) {
+                String sasQueryString, String type,String status) {
         this.setuid(uid);
         this.setid(iid);
         this.setitem(item);
@@ -91,11 +96,31 @@ public class item {
         this.setResourceName(resourceName);
         this.setImageUri(imageUri);
         this.setSasQueryString(sasQueryString);
+        this.settype(type);
+        this.setstatus(status);
     }
 
     /**
      * Returns the item text
      */
+    public String getstatus()
+    {
+        return mstatus;
+    }
+    public final void  setstatus(String status)
+    {
+        mstatus=status;
+    }
+
+    public String gettype()
+    {
+        return mtype;
+    }
+    public final void  settype(String type)
+    {
+        mtype=type;
+    }
+
     public String getId()
     {
         return mId;

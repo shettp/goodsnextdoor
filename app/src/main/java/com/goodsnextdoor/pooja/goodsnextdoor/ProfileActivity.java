@@ -28,6 +28,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.View;
+import android.view.Window;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -37,6 +38,8 @@ import android.widget.Toast;
 import com.facebook.Profile;
 import com.microsoft.windowsazure.mobileservices.table.MobileServiceTable;
 import com.microsoft.windowsazure.mobileservices.table.TableOperationCallback;
+import com.urbanairship.Logger;
+import com.urbanairship.UAirship;
 
 import java.io.BufferedInputStream;
 import java.io.ByteArrayOutputStream;
@@ -68,6 +71,7 @@ Profile d;
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_profile);
+       // this.requestWindowFeature(Window.FEATURE_NO_TITLE);
         Profile.fetchProfileForCurrentAccessToken();
         Profile p=Profile.getCurrentProfile();
         while(p==null) {
@@ -122,7 +126,7 @@ Profile d;
         }
         try {
 
-            mClient = new MobileServiceClient("https://goodsnextdoorproject.azure-mobile.net/","wfPWzbslQQqWgCwgYRzGTzRbXeYBLj14",this);
+            mClient = new MobileServiceClient("https://goodsnextdoorcapstone.azure-mobile.net/","IrDKWwuYiCMcDatgBeOzklZKeOINDD73",this);
 
             // Get the Mobile Service Table instance to use
             muser = mClient.getTable(fbuser.class);
@@ -134,6 +138,11 @@ Profile d;
 
 
 
+    }
+    public void home(View v)
+    {
+        Intent  intent = new Intent(ProfileActivity.this, optionsActivity.class);
+        startActivity(intent);
     }
 
     private void openAlert() {
@@ -157,6 +166,9 @@ Profile d;
             public void onClick(DialogInterface dialog,int id) {
                 item.setemail(input.getText().toString());
                 item.setImageUri(ur.toString());
+                String channelId = UAirship.shared().getPushManager().getChannelId();
+                Logger.info("My Application Channel ID: " + channelId);
+                item.setchanelid(channelId);
 
                 new AsyncTask<Void, Void, Void>() {
                         @Override
@@ -181,9 +193,7 @@ Profile d;
 
                 dialog.cancel();
 
-                Toast.makeText(getApplicationContext(), "Your data is saved in the database",
-
-                        Toast.LENGTH_LONG).show();
+                Toast.makeText(getApplicationContext(), "Your data is saved in the database", Toast.LENGTH_LONG).show();
 
             }
 

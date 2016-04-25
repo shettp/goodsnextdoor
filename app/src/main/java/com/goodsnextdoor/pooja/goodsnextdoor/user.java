@@ -20,6 +20,9 @@ public class user {
     @com.google.gson.annotations.SerializedName("email")
     private String memail;
 
+    @com.google.gson.annotations.SerializedName("channelid")
+    private String mchannelid;
+
     /**
      * Indicates if the item is completed
      */
@@ -38,6 +41,7 @@ public class user {
         mResourceName = "";
         mImageUri = "";
         mSasQueryString = "";
+        mchannelid="";
     }
 
 
@@ -48,7 +52,7 @@ public class user {
                 String containerName,
                 String resourceName,
                 String imageUri,
-                String sasQueryString) {
+                String sasQueryString,String Channel) {
         this.setuid(uid);
         this.setid(iid);
         this.setemail(email);
@@ -57,6 +61,7 @@ public class user {
         this.setResourceName(resourceName);
         this.setImageUri(imageUri);
         this.setSasQueryString(sasQueryString);
+        this.setchannelid(Channel);
     }
 
     /**
@@ -104,6 +109,15 @@ public class user {
     public final void setemail(String email)
     {
         memail=email;
+    }
+
+    public  String getChannelid()
+    {
+        return mchannelid;
+    }
+    public final void setchannelid(String chanel)
+    {
+        mchannelid=chanel;
     }
     /**
      * Indicates if the item is marked as completed

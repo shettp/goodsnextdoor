@@ -8,7 +8,8 @@
     android:paddingBottom="@dimen/activity_vertical_margin"
     app:layout_behavior="@string/appbar_scrolling_view_behavior"
     tools:showIn="@layout/activity_edit"
-    tools:context="com.goodsnextdoor.pooja.goodsnextdoor.EditActivity">
+    tools:context="com.goodsnextdoor.pooja.goodsnextdoor.EditActivity"
+    android:background="@drawable/yell">
 
     <EditText
         android:layout_width="wrap_content"
@@ -18,7 +19,8 @@
         android:id="@+id/pname"
         android:layout_marginTop="21dp"
         android:layout_alignParentTop="true"
-        android:layout_centerHorizontal="true" />
+        android:layout_centerHorizontal="true"
+        android:textStyle="bold" />
 
     <TextView
         android:layout_width="wrap_content"
@@ -28,7 +30,9 @@
         android:layout_alignBaseline="@+id/pname"
         android:layout_alignBottom="@+id/pname"
         android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true" />
+        android:layout_alignParentStart="true"
+        android:textStyle="bold"
+        android:textColor="#080000" />
 
     <TextView
         android:layout_width="wrap_content"
@@ -38,7 +42,9 @@
         android:layout_below="@+id/pname"
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true"
-        android:id="@+id/textView7" />
+        android:id="@+id/textView7"
+        android:textStyle="bold"
+        android:textColor="#090000" />
 
     <EditText
         android:layout_width="wrap_content"
@@ -48,18 +54,19 @@
         android:layout_alignRight="@+id/pname"
         android:layout_alignEnd="@+id/pname"
         android:layout_alignLeft="@+id/pname"
-        android:layout_alignStart="@+id/pname" />
+        android:layout_alignStart="@+id/pname"
+        android:textStyle="bold" />
 
     <Button
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Click Photo"
+        android:layout_width="68dp"
+        android:layout_height="67dp"
         android:id="@+id/ph"
         android:onClick="takePicture"
         android:layout_marginTop="59dp"
         android:layout_below="@+id/textView7"
         android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true" />
+        android:layout_alignParentStart="true"
+        android:background="@drawable/camean" />
 
     <ImageView
         android:layout_width="wrap_content"
@@ -72,22 +79,32 @@
         android:layout_alignBottom="@+id/ph" />
 
     <Button
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="upload&amp;submit"
+        android:layout_width="68dp"
+        android:layout_height="67dp"
         android:id="@+id/upload"
         android:onClick="uploadPhoto"
         android:layout_alignParentBottom="true"
         android:layout_centerHorizontal="true"
-        android:layout_marginBottom="112dp" />
+        android:layout_marginBottom="112dp"
+        android:background="@drawable/cloud" />
 
     <Button
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Choose"
+        android:layout_width="68dp"
+        android:layout_height="67dp"
         android:id="@+id/pick"
+        android:background="@drawable/gall"
         android:layout_alignTop="@+id/imageView"
-        android:layout_toRightOf="@+id/imageView"
-        android:layout_toEndOf="@+id/imageView" />
+        android:layout_toRightOf="@+id/pcontact"
+        android:layout_toEndOf="@+id/pcontact" />
+
+    <Button
+        android:layout_width="50dp"
+        android:layout_height="50dp"
+        android:id="@+id/home"
+        android:background="@drawable/homepp"
+        android:onClick="home"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentEnd="true" />
 
 </RelativeLayout>

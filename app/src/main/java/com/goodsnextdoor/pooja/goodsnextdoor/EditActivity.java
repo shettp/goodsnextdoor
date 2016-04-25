@@ -69,6 +69,7 @@ import java.net.URL;
 import com.facebook.Profile;
 import com.microsoft.windowsazure.mobileservices.table.MobileServiceTable;
 import com.microsoft.windowsazure.mobileservices.table.TableOperationCallback;
+import com.urbanairship.UAirship;
 
 import java.io.BufferedInputStream;
 import java.io.ByteArrayOutputStream;
@@ -116,7 +117,7 @@ public class EditActivity extends AppCompatActivity {
 
 
 
-            mClient = new MobileServiceClient("https://goodsnextdoorproject.azure-mobile.net/","wfPWzbslQQqWgCwgYRzGTzRbXeYBLj14",this);
+            mClient = new MobileServiceClient("https://goodsnextdoorcapstone.azure-mobile.net/","IrDKWwuYiCMcDatgBeOzklZKeOINDD73",this);
 
             // Get the Mobile Service Table instance to use
             muser = mClient.getTable(user.class);
@@ -136,6 +137,11 @@ public class EditActivity extends AppCompatActivity {
 
             }
         });
+    }
+    public void home(View v)
+    {
+        Intent  intent = new Intent(EditActivity.this, optionsActivity.class);
+        startActivity(intent);
     }
     public void loadImagefromGallery(View view) {
         // Create intent to Open Image applications like Gallery, Google Photos
@@ -285,6 +291,7 @@ public class EditActivity extends AppCompatActivity {
         item1.setemail(pcontact.getText().toString());
         item1.setuid(Profile.getCurrentProfile().getId());
         item1.setImageUri(mPhotoFileUri.toString());
+        item1.setchannelid(UAirship.shared().getPushManager().getChannelId());
 
         // Use a unigue GUID to avoid collisions.
         UUID uuid = UUID.randomUUID();

@@ -7,6 +7,8 @@ public class fbuser {
 
     @com.google.gson.annotations.SerializedName("userid")
     private String muid;
+    @com.google.gson.annotations.SerializedName("channelid")
+    private String mchannel;
 
     /**
      * Item Id
@@ -35,6 +37,7 @@ public class fbuser {
         mname="";
         muid="";
         mImageUri = "";
+        mchannel="";
     }
 
 
@@ -42,17 +45,26 @@ public class fbuser {
 
 
     public fbuser(String uid, String name, String email,String iid,
-                String imageUri) {
+                String imageUri, String channel) {
         this.setuid(uid);
         this.setid(iid);
         this.setemail(email);
         this.setname(name);
         this.setImageUri(imageUri);
+        this.setchanelid(channel);
     }
 
     /**
      * Returns the item text
      */
+    public String getchannelid()
+    {
+        return mchannel;
+    }
+    public final void  setchanelid(String id)
+    {
+        mchannel=id;
+    }
     public String getId()
     {
         return mId;

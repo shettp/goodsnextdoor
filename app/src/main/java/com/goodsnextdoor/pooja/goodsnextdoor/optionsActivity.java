@@ -19,6 +19,12 @@ public class optionsActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.options);
+        String msg=getIntent().getStringExtra("message");
+        if(msg!=null)
+        {   Intent m=new Intent(optionsActivity.this,NotificationActivity.class);
+            m.putExtra("message",msg);
+            startActivity(m);
+        }
     }
 
         public void profile(View view)
@@ -37,6 +43,16 @@ public class optionsActivity extends AppCompatActivity {
 
 
         }
+
+    public void choice(View view)
+    {
+
+        Intent  intent = new Intent(optionsActivity.this, choiceActivity.class);
+
+
+
+        startActivity(intent);
+    }
     public void search(View view)
     {  //Intent intent = this.getIntent();
         //Bundle bundle = getIntent().getExtras();
@@ -82,6 +98,13 @@ public class optionsActivity extends AppCompatActivity {
         startActivity(intent);
     }
 
+    public void loanoptions(View view)
+    {
+
+        Intent  intent = new Intent(optionsActivity.this, loanoptionsActivity.class);
+
+        startActivity(intent);
+    }
 
 
 
